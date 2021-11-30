@@ -83,6 +83,16 @@ const postProcessBranches: Fig.Generator["postProcess"] = (out) => {
   });
 };
 
+const gitmoji: Fig.Generator = {
+  script: "git --no-optional-locks log --oneline",
+  postProcess: function () {
+    return [
+      { name: "\":bug: '{cursor}'\"", description: "Bug fix" },
+      { name: "\":sparkles: '{cursor}'\"", description: "New feature" },
+    ];
+  },
+};
+
 const gitGenerators: Record<string, Fig.Generator> = {
   // Commit history
   commits: {
@@ -5649,11 +5659,66 @@ const completionSpec: Fig.Spec = {
   ],
   additionalSuggestions: [
     {
+      name: "fpush",
+      insertValue: "push --no-verify --force origin",
+      description: "Force push without tests on origin branch",
+    },
+    {
+      name: "noverifpush",
+      insertValue: "push --no-verify origin",
+      description: "Push without tests on origin branch",
+    },
+    {
+      name: "branchfix",
+      insertValue: "checkout -b fix/NB/",
+      description: "Create new fix branch",
+    },
+    {
+      name: "branchfeature",
+      insertValue: "checkout -b feature/NB/",
+      description: "Create new feature branch",
+    },
+    {
       name: "commit -m 'msg'",
       description: "Git commit shortcut",
       insertValue: "commit -m '{cursor}'",
       icon: "fig://template?color=2ecc71&badge=🔥",
       // type: "shortcut",
+    },
+    {
+      name: "bug",
+      insertValue: 'commit -nam ":bug: {cursor}"',
+      description:
+        "No verify, stage all and use given text as bug fix commit message",
+      icon: "🐛",
+    },
+    {
+      name: "feature",
+      insertValue: 'commit -nam ":sparkles: {cursor}"',
+      description:
+        "No verify, stage all and use given text as new feature commit message",
+      icon: "✨",
+    },
+    {
+      name: "structure",
+      insertValue: 'commit -nam ":art: {cursor}"',
+      description:
+        "No verify, stage all and use given text as improve structure/format of code commit message",
+      icon: "🎨",
+    },
+    {
+      name: "ui",
+      insertValue: 'commit -nam ":lipstick: {cursor}"',
+      description:
+        "No verify, stage all and use given text as add / update UI commit message",
+      icon: "💄",
+    },
+    {
+      name: "tests",
+      insertValue: 'commit -nam ":white_check_mark: {cursor}"',
+      description:
+        "No verify, stage all and use given text as add/update/pass tests commit message",
+      icon: "✅",
     },
   ],
 };
